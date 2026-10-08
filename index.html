@@ -17,8 +17,8 @@
  #game .tip{display:none}
 }
 @media(max-width:760px) and (max-height:650px){#game .wrap{height:42dvh}#game .mobile-controls button{min-height:52px}}
-</style></head><body><main class="app"><div class="logo">WORD INVADERS</div>
-<section id="menu" class="screen active"><div class="grid"><div class="card"><h2>GAME SETTINGS</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div class="help"><b>Language</b></div><select id="language"><option value="de-DE">German</option><option value="es-ES">Spanish</option><option value="da-DK">Danish</option><option value="en-US">English</option></select></div><div><div class="help"><b>Vocabulary</b></div><select id="category"></select></div></div><div id="voiceCheck" class="preview"><b>VOICE:</b> checking…</div><button id="testVoice" class="yellow" type="button">🔊 TEST VOICE</button><div class="preview"><b>Controls</b><br>← → / A D = move<br>Space / ↑ / W = fire<br>P = pause<br><br>Four answers descend together. Shoot the correct one to clear the wave. Wrong shots cost a life, but all four answers stay.</div><button id="play" class="primary wide">PLAY</button></div><div class="card"><h2>PASTE QUIZLET WORDS</h2><div class="help">Paste term/definition pairs. Built-in lists remain editable.</div><textarea id="words">gucken	to watch, to look at
+.shareRow{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.shareRow button{margin:0}.shareStatus{font-size:12px;font-weight:bold;color:#294361;line-height:1.5}.studentIntro{display:none;margin:8px auto;padding:20px;max-width:650px;background:#f6e8bd;color:#15254a;border:4px solid #101a43;text-align:center}.studentTitle{font:900 clamp(18px,5vw,26px) "Courier New";color:#c43d72;overflow-wrap:anywhere}.studentMeta{font:900 13px "Courier New";margin:12px 0}body.studentMode #teacherGrid{display:none!important}body.studentMode #studentIntro{display:block}@media(max-width:760px){.studentIntro{padding:12px;margin:6px}.shareRow button{flex:1;font-size:12px;padding:9px 5px}}</style></head><body><main class="app"><div class="logo">WORD INVADERS</div>
+<section id="menu" class="screen active"><div id="studentIntro" class="studentIntro"><div>✓ TEACHER VOCABULARY</div><div id="studentSetTitle" class="studentTitle">LOADING VOCABULARY…</div><div id="studentSetMeta" class="studentMeta">PLEASE WAIT</div><button id="studentPlay" class="primary wide" type="button" disabled>▶ START GAME</button><div class="help">MOVE: ← → / A D · FIRE: SPACE / ↑ / W<br>On mobile, use LEFT, FIRE and RIGHT.</div></div><div id="teacherGrid" class="grid"><div class="card"><h2>GAME SETTINGS</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div class="help"><b>Language</b></div><select id="language"><option value="de-DE">German</option><option value="es-ES">Spanish</option><option value="da-DK">Danish</option><option value="en-US">English</option></select></div><div><div class="help"><b>Vocabulary</b></div><select id="category"></select></div></div><div id="voiceCheck" class="preview"><b>VOICE:</b> checking…</div><button id="testVoice" class="yellow" type="button">🔊 TEST VOICE</button><div class="preview"><b>Controls</b><br>← → / A D = move<br>Space / ↑ / W = fire<br>P = pause<br><br>Four answers descend together. Shoot the correct one to clear the wave. Wrong shots cost a life, but all four answers stay.</div><button id="play" class="primary wide">PLAY</button></div><div class="card"><h2>PASTE QUIZLET WORDS</h2><div class="help">Paste term/definition pairs. Built-in lists remain editable.</div><textarea id="words">gucken	to watch, to look at
 fahren	to drive
 essen	to eat
 trinken	to drink
@@ -29,7 +29,7 @@ sprechen	to speak
 gehen	to go
 kommen	to come
 spielen	to play
-lernen	to learn</textarea><button id="swap">⇄ SWAP SIDES</button><div id="preview" class="preview"></div><div id="error" class="error"></div></div>
+lernen	to learn</textarea><div class="shareRow"><button id="createStudentLink" class="pink" type="button">🔗 CREATE STUDENT LINK</button><button id="copyStudentLink" type="button" style="display:none">📋 COPY LINK</button></div><div id="shareStatus" class="shareStatus" aria-live="polite">Share the vocabulary shown above using a permanent student link.</div><button id="swap">⇄ SWAP SIDES</button><div id="preview" class="preview"></div><div id="error" class="error"></div></div>
 </div></section>
 <section id="game" class="screen"><div class="hud"><div>SCORE <span id="score">0</span> · <span id="lives">❤❤❤</span></div><div id="progress"></div></div><div id="wrap" class="wrap"><canvas id="canvas"></canvas><div id="toast" class="toast"></div><div id="pauseOverlay" class="overlay"><div class="big" style="color:#f2d64b">PAUSED</div></div><div id="gameOver" class="overlay"><div><div class="big">GAME OVER</div><div class="msg">Nice try, your grandma would be proud</div><button id="again" class="primary">PLAY AGAIN</button><button id="overMenu" class="pink">MAIN MENU</button></div></div></div><div class="buttons"><button id="pause" class="yellow">PAUSE</button><button id="restart">RESTART</button><button id="mainMenu" class="pink">MAIN MENU</button><button id="sound">🔊 SOUND ON</button></div><div id="mobileControls" class="mobile-controls" aria-label="Mobile arcade controls"><button id="touchLeft" type="button" aria-label="Move left">◀ LEFT</button><button id="touchFire" class="fire" type="button" aria-label="Fire">● FIRE</button><button id="touchRight" type="button" aria-label="Move right">RIGHT ▶</button></div><div class="tip">MOVE: ← → / A D · FIRE: SPACE / ↑ / W · P: PAUSE</div></section></main>
 <script>
@@ -143,5 +143,145 @@ fireButton.addEventListener("lostpointercapture",mobileFireUp,{passive:false});
 function releaseMobileControls(){releaseMobileLeft();releaseMobileRight();firePointers.clear();}
 window.addEventListener("blur",releaseMobileControls);
 document.addEventListener("visibilitychange",function(){if(document.hidden)releaseMobileControls()});
-window.addEventListener("resize",resize);cats(false);preview();
+var VOCAB_API="https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev";
+var lastStudentLink="";
+var sharingBusy=false;
+
+function currentSetTitle(){
+  var c=E("category");
+  return c && c.value!=="custom" ? c.options[c.selectedIndex].text : "Custom Vocabulary";
+}
+
+async function createStudentLink(){
+  var pairs=parse(ta.value); // textarea remains the teacher-side source of truth
+  if(pairs.length<5){
+    E("shareStatus").textContent="Please add at least 5 valid word pairs first.";
+    return;
+  }
+  if(sharingBusy)return;
+  sharingBusy=true;
+  var button=E("createStudentLink");
+  var oldText=button.textContent;
+  button.disabled=true;
+  button.textContent="SAVING…";
+  E("shareStatus").textContent="Saving this vocabulary set…";
+
+  try{
+    var response=await fetch(VOCAB_API+"/sets",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        title:currentSetTitle(),
+        language:E("language").value,
+        pairs:pairs
+      })
+    });
+
+    var data=null;
+    try{data=await response.json()}catch(parseError){}
+
+    if(!response.ok){
+      throw new Error(data && (data.error||data.message) ? (data.error||data.message) : "HTTP "+response.status);
+    }
+
+    var setId=data && (data.id || data.setId || (data.set && data.set.id));
+    if(!setId)throw new Error("The API saved the set but did not return an ID.");
+
+    var u=new URL(location.href);
+    u.search="";
+    u.hash="set="+encodeURIComponent(setId);
+    lastStudentLink=u.toString();
+
+    E("copyStudentLink").style.display="block";
+    E("shareStatus").textContent="✓ STUDENT LINK READY — permanent set "+setId+" · "+pairs.length+" words.";
+  }catch(err){
+    console.error("Could not create vocabulary set:",err);
+    lastStudentLink="";
+    E("copyStudentLink").style.display="none";
+    E("shareStatus").textContent="Could not save this set. Please try again.";
+  }finally{
+    sharingBusy=false;
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+}
+
+async function copyStudentLink(){
+  if(!lastStudentLink)return;
+  try{await navigator.clipboard.writeText(lastStudentLink)}
+  catch(e){
+    var x=document.createElement("textarea");x.value=lastStudentLink;document.body.appendChild(x);
+    x.select();document.execCommand("copy");x.remove();
+  }
+  E("shareStatus").textContent="✓ LINK COPIED — ready to send to students.";
+}
+
+function normalizeLoadedPairs(data){
+  var pairs=data && (data.pairs || data.vocabulary || (data.set && (data.set.pairs || data.set.vocabulary)));
+  if(typeof pairs==="string"){
+    try{pairs=JSON.parse(pairs)}catch(e){pairs=null}
+  }
+  return Array.isArray(pairs) ? pairs : null;
+}
+
+async function loadStudentSet(){
+  if(!location.hash.startsWith("#set="))return false;
+
+  var setId="";
+  try{setId=decodeURIComponent(location.hash.slice(5)).trim()}catch(e){return false}
+  if(!setId)return false;
+
+  document.body.classList.add("studentMode");
+  E("studentSetTitle").textContent="LOADING VOCABULARY…";
+  E("studentSetMeta").textContent="PLEASE WAIT";
+  E("studentPlay").disabled=true;
+
+  try{
+    var response=await fetch(VOCAB_API+"/sets/"+encodeURIComponent(setId),{
+      method:"GET",
+      headers:{"Accept":"application/json"}
+    });
+    var data=null;
+    try{data=await response.json()}catch(parseError){}
+
+    if(!response.ok){
+      throw new Error(data && (data.error||data.message) ? (data.error||data.message) : "HTTP "+response.status);
+    }
+
+    var pairs=normalizeLoadedPairs(data);
+    if(!pairs || pairs.length<5)throw new Error("Set has fewer than 5 valid word pairs.");
+
+    var locale=data.language || data.lang || (data.set && (data.set.language || data.set.lang));
+    var title=data.title || (data.set && data.set.title) || "Teacher Vocabulary";
+
+    if(locale && Array.from(E("language").options).some(function(o){return o.value===locale})){
+      E("language").value=locale;
+      lang=locale;
+      cats(false);
+      updateVoiceCheck();
+    }
+
+    ta.value=pairs.map(function(pair){return pair[0]+"\t"+pair[1]}).join("\n");
+    E("category").value="custom";
+    preview();
+
+    E("studentSetTitle").textContent=String(title).toUpperCase();
+    var langName=E("language").options[E("language").selectedIndex].text;
+    E("studentSetMeta").textContent=langName.toUpperCase()+" · "+pairs.length+" WORDS · SET "+setId;
+    E("studentPlay").disabled=false;
+    return true;
+  }catch(err){
+    console.error("Could not load vocabulary set:",err);
+    E("studentSetTitle").textContent="SET COULD NOT BE LOADED";
+    E("studentSetMeta").textContent="CHECK THE LINK OR ASK YOUR TEACHER FOR A NEW ONE";
+    E("studentPlay").disabled=true;
+    return false;
+  }
+}
+
+E("createStudentLink").onclick=createStudentLink;
+E("copyStudentLink").onclick=copyStudentLink;
+E("studentPlay").onclick=function(){if(!this.disabled)E("play").click()};
+window.addEventListener("hashchange",function(){if(location.hash.startsWith("#set="))loadStudentSet();else{document.body.classList.remove("studentMode");E("studentPlay").disabled=true}});
+window.addEventListener("resize",resize);cats(false);preview();loadStudentSet();
 })();</script></body></html>
