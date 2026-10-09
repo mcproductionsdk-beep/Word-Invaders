@@ -39,9 +39,20 @@ select{min-height:48px;font-size:16px}
 button{min-height:48px}
 #shareStudentLink,.finalPlay{min-height:56px}
 }
+#studentIntro{display:none!important}body.studentMode #menu.active #studentIntro{display:block!important}body.studentMode #menu:not(.active){display:none!important}#promptBanner{position:relative;z-index:2;color:#101a43!important;background:#f2d64b!important;opacity:1!important;visibility:visible!important}/* V1.1 mobile visibility correction: teacher and student screens never overlap. */
+#studentIntro{display:none!important}
+body.studentMode #menu.active #studentIntro{display:block!important}
+body:not(.studentMode) #studentIntro{display:none!important}
+body.studentMode #menu:not(.active){display:none!important}
+#promptBanner{display:block!important;grid-column:1/-1!important;position:relative;z-index:5;opacity:1!important;visibility:visible!important;background:#f2d64b!important;color:#101a43!important;-webkit-text-fill-color:#101a43!important;text-shadow:none!important;font-size:clamp(20px,5vw,32px)!important;font-weight:900!important;min-height:52px!important}
+/* Standalone prompt, outside the HUD and canvas frame, never clipped by grid. */
+#game.active{display:flex;flex-direction:column;align-items:stretch}
+#game .hud{display:grid;grid-template-columns:minmax(0,1fr) auto;overflow:visible}
+#game #promptBanner.promptStandalone{display:block!important;position:static!important;flex:none;width:100%;max-width:100%;box-sizing:border-box;margin:10px 0 12px!important;padding:12px 10px!important;min-height:64px!important;line-height:1.3!important;white-space:normal;overflow-wrap:anywhere;transform:none!important;clip-path:none!important;overflow:visible!important;border:4px solid #101a43!important;box-shadow:3px 3px 0 #090b28!important}
+#game #wrap{position:relative;z-index:0;margin-top:0;flex:none}
 </style></head><body><main class="app"><div class="logo">WORD INVADERS</div>
 <section id="menu" class="screen active">
-<div id="studentIntro">
+<div id="studentIntro" class="studentIntro" hidden>
   <div class="studentTitle" id="studentSetTitle">VOCABULARY SET</div>
   <div class="studentMeta" id="studentSetMeta">READY TO PLAY</div>
   <button id="studentPlay" class="primary" type="button">PLAY</button>
@@ -89,7 +100,7 @@ lernen	to learn</textarea>
     <button id="play" class="primary wide finalPlay teacherOnly" type="button">PLAY</button>
   </div>
 </div></section>
-<section id="game" class="screen"><div class="hud"><div>SCORE <span id="score">0</span> · <span id="lives">❤❤❤</span></div><div id="progress"></div><div id="promptBanner" role="status" aria-live="polite">FIND THE TRANSLATION</div></div><div id="wrap" class="wrap"><canvas id="canvas"></canvas><div id="toast" class="toast"></div><div id="pauseOverlay" class="overlay"><div class="big" style="color:#f2d64b">PAUSED</div></div><div id="gameOver" class="overlay"><div><div class="big">GAME OVER</div><div class="msg">Nice try, your grandma would be proud</div><button id="again" class="primary">PLAY AGAIN</button><button id="overMenu" class="pink">MAIN MENU</button></div></div></div><div class="buttons"><button id="pause" class="yellow">PAUSE</button><button id="restart">RESTART</button><button id="mainMenu" class="pink">MAIN MENU</button><button id="sound">🔊 SOUND ON</button></div><div id="mobileControls" class="mobile-controls" aria-label="Mobile arcade controls"><button id="touchLeft" type="button" aria-label="Move left">◀ LEFT</button><button id="touchFire" class="fire" type="button" aria-label="Fire">● FIRE</button><button id="touchRight" type="button" aria-label="Move right">RIGHT ▶</button></div><div class="tip">MOVE: ← → / A D · FIRE: SPACE / ↑ / W · P: PAUSE</div></section></main>
+<section id="game" class="screen"><div class="hud"><div>SCORE <span id="score">0</span> · <span id="lives">❤❤❤</span></div><div id="progress"></div></div><div id="promptBanner" class="promptStandalone" role="status" aria-live="polite">FIND THE TRANSLATION</div><div id="wrap" class="wrap"><canvas id="canvas"></canvas><div id="toast" class="toast"></div><div id="pauseOverlay" class="overlay"><div class="big" style="color:#f2d64b">PAUSED</div></div><div id="gameOver" class="overlay"><div><div class="big">GAME OVER</div><div class="msg">Nice try, your grandma would be proud</div><button id="again" class="primary">PLAY AGAIN</button><button id="overMenu" class="pink">MAIN MENU</button></div></div></div><div class="buttons"><button id="pause" class="yellow">PAUSE</button><button id="restart">RESTART</button><button id="mainMenu" class="pink">MAIN MENU</button><button id="sound">🔊 SOUND ON</button></div><div id="mobileControls" class="mobile-controls" aria-label="Mobile arcade controls"><button id="touchLeft" type="button" aria-label="Move left">◀ LEFT</button><button id="touchFire" class="fire" type="button" aria-label="Fire">● FIRE</button><button id="touchRight" type="button" aria-label="Move right">RIGHT ▶</button></div><div class="tip">MOVE: ← → / A D · FIRE: SPACE / ↑ / W · P: PAUSE</div></section></main>
 <script>
 (function(){"use strict";function E(x){return document.getElementById(x)}var ta=E("words"),canvas=E("canvas"),ctx=canvas.getContext("2d"),wrap=E("wrap"),menu=E("menu"),game=E("game");
 var LIB={"de-DE":{"Basics":[["hallo","hello"],["ja","yes"],["nein","no"],["bitte","please"],["danke","thank you"],["gut","good"],["schlecht","bad"],["groß","big"],["klein","small"],["neu","new"],["alt","old"],["heute","today"]],"Family":[["die Mutter","mother"],["der Vater","father"],["die Schwester","sister"],["der Bruder","brother"],["die Eltern","parents"],["die Familie","family"],["die Oma","grandmother"],["der Opa","grandfather"]],"Food & Drink":[["der Apfel","apple"],["das Brot","bread"],["der Käse","cheese"],["das Wasser","water"],["die Milch","milk"],["der Reis","rice"],["das Ei","egg"],["essen","to eat"],["trinken","to drink"],["kochen","to cook"]],"School":[["die Schule","school"],["der Lehrer","teacher"],["der Schüler","student"],["das Buch","book"],["der Stift","pen"],["der Tisch","table"],["der Stuhl","chair"],["lesen","to read"],["schreiben","to write"],["lernen","to learn"]],"Common Verbs":[["sein","to be"],["haben","to have"],["gehen","to go"],["kommen","to come"],["machen","to do / make"],["sehen","to see"],["sprechen","to speak"],["essen","to eat"],["trinken","to drink"],["lesen","to read"],["schreiben","to write"],["spielen","to play"]],"Animals":[["der Hund","dog"],["die Katze","cat"],["der Vogel","bird"],["der Fisch","fish"],["das Pferd","horse"],["die Kuh","cow"],["das Schwein","pig"],["die Maus","mouse"]]},
@@ -120,7 +131,7 @@ function makeWave(){
  var xs=[.20,.40,.60,.80];
  for(var j=0;j<4;j++)invaders.push({x:xs[j],y:-.08,pair:choices[j],w:.075,h:.055,wave:j*1.45,waveId:waveId});
 }
-function fire(){if(!running||paused||cooldown>0)return;shots.push({x:ship.x,y:.82});cooldown=.24;beep(620,.045,850)}
+function fire(){if(!running||paused||cooldown>0)return;shots.push({x:ship.x,y:.70});cooldown=.24;beep(620,.045,850)}
 function enemyFire(dt){if(!running||paused||!invaders.length)return;enemyFireTimer-=dt;if(enemyFireTimer>0)return;var shooters=invaders.filter(function(q){return q.y>-.02&&q.y<.76});if(!shooters.length){enemyFireTimer=.18;return}var q=shooters[Math.floor(Math.random()*shooters.length)];enemyShots.push({x:q.x,y:q.y+.055});beep(240,.035,150);enemyFireTimer=enemyFireInterval*(.78+Math.random()*.44)}
 function hit(inv){
  if(inv.pair.id===current.id){
@@ -139,7 +150,7 @@ function update(dt){
  if(cooldown>0)cooldown-=dt;if(invincible>0)invincible-=dt;
  var dx=0;if(keys.left)dx-=.55*dt;if(keys.right)dx+=.55*dt;
  ship.x=Math.max(.055,Math.min(.945,ship.x+dx));
- shots.forEach(function(b){b.y-=.78*dt});shots=shots.filter(function(b){return b.y>-.04});enemyFire(dt);enemyShots.forEach(function(b){b.y+=.48*dt});for(var es=enemyShots.length-1;es>=0;es--){var eb=enemyShots[es];if(eb.y>.84&&eb.y<.91&&Math.abs(eb.x-ship.x)<.045){enemyShots.splice(es,1);hurt("INVADER SHOT YOU!");continue}if(eb.y>1.02)enemyShots.splice(es,1);}
+ shots.forEach(function(b){b.y-=.78*dt});shots=shots.filter(function(b){return b.y>-.04});enemyFire(dt);enemyShots.forEach(function(b){b.y+=.48*dt});for(var es=enemyShots.length-1;es>=0;es--){var eb=enemyShots[es];if(eb.y>.72&&eb.y<.79&&Math.abs(eb.x-ship.x)<.045){enemyShots.splice(es,1);hurt("INVADER SHOT YOU!");continue}if(eb.y>1.02)enemyShots.splice(es,1);}
  var activeWave=waveId;
  for(var i=invaders.length-1;i>=0;i--){
    var q=invaders[i];q.y+=fallSpeed*dt;
@@ -156,7 +167,7 @@ function update(dt){
      }
    }
    if(wasHit)continue;
-   if(q.y>.82&&Math.abs(q.x-ship.x)<.075){hurt("INVADER HIT!");q.y=.74;continue}
+   if(q.y>.70&&q.y<.83&&Math.abs(q.x-ship.x)<.075){hurt("INVADER HIT!");q.y=.74;continue}
    if(q.y>.96){
      /* Keep the question intact: recycle the whole four-choice wave if it reaches the bottom. */
      invaders.forEach(function(v){v.y=-.08});
@@ -175,7 +186,7 @@ if("speechSynthesis"in window){loadVoices();try{window.speechSynthesis.addEventL
 function flash(t,ok){var x=E("toast");x.textContent=t;x.style.color=ok?"#79ff70":"#ff6b77";x.style.display="block";clearTimeout(flash.t);flash.t=setTimeout(function(){x.style.display="none"},650)}
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h)}
 function drawInvader(q){var x=q.x*W,y=q.y*H,u=Math.max(2,Math.floor(H/260));ctx.save();ctx.translate(x,y);var c="#e65788";rect(-7*u,-5*u,14*u,8*u,c);rect(-10*u,-2*u,4*u,6*u,c);rect(6*u,-2*u,4*u,6*u,c);rect(-5*u,-8*u,3*u,3*u,c);rect(2*u,-8*u,3*u,3*u,c);rect(-4*u,-3*u,2*u,2*u,"#fff");rect(2*u,-3*u,2*u,2*u,"#fff");rect(-3*u,4*u,3*u,3*u,c);rect(1*u,4*u,3*u,3*u,c);ctx.font="900 "+Math.max(10,Math.min(15,H*.024))+"px Courier New";ctx.textAlign="center";ctx.textBaseline="middle";var tw=Math.min(Math.max(58,ctx.measureText(q.pair.target).width+12),W*.20);rect(-tw/2-2,8*u,tw+4,24,"#101a43");rect(-tw/2,8*u+2,tw,20,"#f6e8bd");ctx.fillStyle="#101a43";ctx.fillText(q.pair.target,0,8*u+12,tw-5);ctx.restore()}
-function drawShip(){var x=ship.x*W,y=H*.86,u=Math.max(2,Math.floor(H/260));if(window.matchMedia("(max-width:760px)").matches)u=Math.max(2,Math.min(u,Math.floor((H-y-34)/15)));ctx.save();if(invincible>0&&Math.floor(invincible*12)%2===0)ctx.globalAlpha=.35;rect(x-9*u,y-3*u,18*u,7*u,"#58c7d8");rect(x-5*u,y-7*u,10*u,5*u,"#f2d64b");rect(x-2*u,y-10*u,4*u,4*u,"#ef6689");rect(x-12*u,y+1*u,5*u,4*u,"#58c7d8");rect(x+7*u,y+1*u,5*u,4*u,"#58c7d8");rect(x-5*u,y+4*u,3*u,4*u,"#ff9d3f");rect(x+2*u,y+4*u,3*u,4*u,"#ff9d3f");ctx.restore();if(current){ctx.font="900 "+Math.max(11,Math.min(15,H*.024))+"px Courier New";ctx.textAlign="center";var t=current.prompt.toUpperCase(),tw=Math.min(Math.max(72,ctx.measureText(t).width+16),W*.30),py=y+13*u;rect(x-tw/2-2,py,tw+4,26,"#101a43");rect(x-tw/2,py+2,tw,22,"#f2d64b");ctx.fillStyle="#101a43";ctx.fillText(t,x,py+16,tw-6)}}
+function drawShip(){var x=ship.x*W,y=H*.74,u=Math.max(2,Math.floor(H/260));if(window.matchMedia("(max-width:760px)").matches)u=Math.max(2,Math.min(u,Math.floor((H-y-34)/15)));ctx.save();if(invincible>0&&Math.floor(invincible*12)%2===0)ctx.globalAlpha=.35;rect(x-9*u,y-3*u,18*u,7*u,"#58c7d8");rect(x-5*u,y-7*u,10*u,5*u,"#f2d64b");rect(x-2*u,y-10*u,4*u,4*u,"#ef6689");rect(x-12*u,y+1*u,5*u,4*u,"#58c7d8");rect(x+7*u,y+1*u,5*u,4*u,"#58c7d8");rect(x-5*u,y+4*u,3*u,4*u,"#ff9d3f");rect(x+2*u,y+4*u,3*u,4*u,"#ff9d3f");ctx.restore();if(current){ctx.font="900 "+Math.max(11,Math.min(15,H*.024))+"px Courier New";ctx.textAlign="center";var t=current.prompt.toUpperCase(),tw=Math.min(Math.max(72,ctx.measureText(t).width+16),W*.50),py=Math.min(y+13*u,H-32);rect(x-tw/2-2,py,tw+4,26,"#101a43");rect(x-tw/2,py+2,tw,22,"#f2d64b");ctx.fillStyle="#101a43";ctx.fillText(t,x,py+16,tw-6)}}
 function draw(){ctx.clearRect(0,0,W,H);rect(0,0,W,H,"#090b28");for(var i=0;i<stars.length;i++){var s=stars[i];rect(s.x*W,s.y*H,s.z,s.z,i%5===0?"#f2d64b":"#d9edff")}ctx.strokeStyle="#23376f";ctx.lineWidth=2;for(var y=H*.12;y<H*.78;y+=H*.11){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}invaders.forEach(drawInvader);ctx.fillStyle="#f2d64b";shots.forEach(function(b){ctx.fillRect(b.x*W-2,b.y*H-10,4,14)});ctx.fillStyle="#ef6689";enemyShots.forEach(function(b){ctx.fillRect(b.x*W-3,b.y*H,6,14)});drawShip()}
 function resize(){var r=wrap.getBoundingClientRect();W=Math.max(320,r.width);H=Math.max(400,r.height);DPR=Math.max(1,window.devicePixelRatio||1);canvas.width=W*DPR;canvas.height=H*DPR;canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(DPR,0,0,DPR,0,0);if(!stars.length){for(var i=0;i<75;i++)stars.push({x:Math.random(),y:Math.random(),z:1+Math.floor(Math.random()*3)})}draw()}
 function loop(n){if(!running||paused)return;if(!last)last=n;var dt=Math.min(.04,(n-last)/1000);last=n;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
@@ -227,15 +238,15 @@ async function createStudentLink(){
   E("shareStatus").textContent="Saving this vocabulary set…";
 
   try{
-    var response=await fetch(VOCAB_API+"/sets",{
+    var controller=new AbortController();var timer=setTimeout(function(){controller.abort()},12000);var response;try{response=await fetch(VOCAB_API+"/sets",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         title:currentSetTitle(),
         language:E("language").value,
         pairs:pairs
-      })
-    });
+      }),signal:controller.signal
+    })}finally{clearTimeout(timer)}
 
     var data=null;
     try{data=await response.json()}catch(parseError){}
@@ -258,7 +269,7 @@ async function createStudentLink(){
     console.error("Could not create vocabulary set:",err);
     lastStudentLink="";
     E("shareStudentLink").textContent="🔗 SHARE WITH STUDENTS";
-    E("shareStatus").textContent="Could not save this set. Please try again.";
+    E("shareStatus").textContent="Could not save this set: "+(err.name==="AbortError"?"Request timed out after 12 seconds":err.message||"Unknown error");
   }finally{
     sharingBusy=false;
     button.disabled=false;
@@ -273,7 +284,7 @@ async function copyStudentLink(){
     var x=document.createElement("textarea");x.value=lastStudentLink;document.body.appendChild(x);
     x.select();document.execCommand("copy");x.remove();
   }
-  E("shareStatus").textContent="✓ LINK COPIED — ready to send to students.";
+  E("shareStatus").textContent="✓ LINK READY: "+lastStudentLink;
 }
 
 function normalizeLoadedPairs(data){
@@ -291,7 +302,7 @@ async function loadStudentSet(){
   try{setId=decodeURIComponent(location.hash.slice(5)).trim()}catch(e){return false}
   if(!setId)return false;
 
-  document.body.classList.add("studentMode");
+  document.body.classList.add("studentMode");E("studentIntro").hidden=false;
   E("studentSetTitle").textContent="LOADING VOCABULARY…";
   E("studentSetMeta").textContent="PLEASE WAIT";
   E("studentPlay").disabled=true;
@@ -341,6 +352,6 @@ async function loadStudentSet(){
 
 E("shareStudentLink").onclick=async function(){await createStudentLink();if(lastStudentLink)await copyStudentLink()};
 E("studentPlay").onclick=function(){if(!this.disabled)E("play").click()};
-window.addEventListener("hashchange",function(){if(location.hash.startsWith("#set="))loadStudentSet();else{document.body.classList.remove("studentMode");E("studentPlay").disabled=true}});
+window.addEventListener("hashchange",function(){if(location.hash.startsWith("#set="))loadStudentSet();else{document.body.classList.remove("studentMode");E("studentIntro").hidden=true;E("studentPlay").disabled=true}});
 window.addEventListener("resize",resize);cats(false);preview();loadStudentSet();
 })();</script></body></html>
