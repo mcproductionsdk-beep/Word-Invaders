@@ -297,7 +297,7 @@ async function loadStudentSet(){
   try{setId=decodeURIComponent(location.hash.slice(5)).trim()}catch(e){return false}
   if(!setId)return false;
 
-  document.body.classList.add("studentMode");
+  document.body.classList.add("studentMode");E("studentIntro").hidden=false;
   E("studentSetTitle").textContent="LOADING VOCABULARY…";
   E("studentSetMeta").textContent="PLEASE WAIT";
   E("studentPlay").disabled=true;
