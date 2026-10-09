@@ -257,7 +257,7 @@ async function createStudentLink(){
   }catch(err){
     console.error("Could not create vocabulary set:",err);
     lastStudentLink="";
-    E("copyStudentLink").style.display="none";
+    E("shareStudentLink").textContent="🔗 SHARE WITH STUDENTS";
     E("shareStatus").textContent="Could not save this set. Please try again.";
   }finally{
     sharingBusy=false;
