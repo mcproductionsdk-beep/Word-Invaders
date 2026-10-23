@@ -138,7 +138,10 @@ function applyConfig(data){
  if(!data||!Array.isArray(data.pairs))return false;
  var pairs=data.pairs.map(function(p){return Array.isArray(p)?p:[p.target||p.term,p.prompt||p.definition]}).filter(function(p){return p[0]&&p[1]});
  if(pairs.length<5){window.parent.postMessage({type:"BT_INVADERS_ERROR",message:"At least five pairs are required"},"*");return false}
- E("language").value=data.language||"de-DE";
+ var chosenLanguage=data.language||"de-DE";
+ var languageSelect=E("language");
+ if(!Array.from(languageSelect.options).some(function(option){return option.value===chosenLanguage})){var extra=document.createElement("option");extra.value=chosenLanguage;extra.textContent=({"fr-FR":"French","it-IT":"Italian"})[chosenLanguage]||chosenLanguage;languageSelect.appendChild(extra)}
+ languageSelect.value=chosenLanguage;
  ta.value=pairs.map(function(p){return p[0]+"\t"+p[1]}).join("\n");
  return true;
 }
